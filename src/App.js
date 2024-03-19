@@ -23,12 +23,18 @@ const questions = [
   },
 ];
 
-function Result({ setStep }) {
+function Result({ setStep, correct, setCorrect }) {
+  const tryAgain = () => {
+    setStep(0);
+    setCorrect(0);
+  };
   return (
     <div className="result">
       <img alt="congrats" src="https://cdn-icons-png.flaticon.com/512/2278/2278992.png" />
-      <h2>You guessed 3 out of 10 answers</h2>
-      <button onClick={() => setStep(0)}>Try again</button>
+      <h2>
+        You guessed {correct} out of {questions.length} answers
+      </h2>
+      <button onClick={tryAgain}>Try again</button>
     </div>
   );
 }
@@ -54,17 +60,21 @@ function Game({ question, onClickVariant, step }) {
 
 function App() {
   const [step, setStep] = useState(0);
+  const [correct, setCorrect] = useState(0);
   const question = questions[step];
   const onClickVariant = (index) => {
     console.log(step, index);
     setStep(step + 1);
+    if (index === question.correct) {
+      setCorrect(correct + 1);
+    }
   };
   return (
     <div className="App">
       {step !== questions.length ? (
         <Game step={step} onClickVariant={onClickVariant} question={question} />
       ) : (
-        <Result setStep={setStep} />
+        <Result setCorrect={setCorrect} correct={correct} setStep={setStep} />
       )}
     </div>
   );
